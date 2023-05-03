@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ICard } from "../cardForm/cardForm";
 import MaxRowsTextArea from "../../reusable/textArea/maxRowsTextArea";
 import UpdateInputBlock from "./updateCardInputBlock";
-import isEqual from "lodash/isequal";
+import _ from 'lodash';
 import { toast } from "react-toastify";
 import { updateCard } from "@/app/feches/fetches";
 import { useCardContext } from "@/app/contexts/cardContext";
@@ -49,11 +49,11 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
       }
     });
 
-    if (!isEqual(updatedCard, cardDB)) {
+    if (!_.isEqual(updatedCard, cardDB)) {
       mutation.mutate(updatedCard);
       setCard(updatedCard);
     }
-    if (isEqual(updatedCard, cardDB))
+    if (_.isEqual(updatedCard, cardDB))
       toast("Nothing to save", {
         hideProgressBar: false,
         autoClose: 4000,
