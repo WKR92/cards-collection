@@ -6,6 +6,7 @@ import Button from "../reusable/button/button";
 import Card from "../reusable/card/card";
 import { ICard } from "../cardFormArea/cardForm/cardForm";
 import Loader from "../reusable/loader/page";
+import Search from "../reusable/search/search";
 import { getCards } from "@/app/feches/fetches";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -17,6 +18,7 @@ const CardsDisplay: React.FC = () => {
   const componentRef = useRef<HTMLDivElement>(null);
   const [showPrintArea, setShowPrintArea] = useState(false);
   const [showPrintLoader, setShowPrintLoader] = useState(false);
+  const [cardsDB, setCardsDB] = useState<ICard[]>([]);
   const { cards, setCards } = useCardContext();
   const { isLoading, isError, data, error } = useQuery<
     { cards: ICard[] },
@@ -29,6 +31,10 @@ const CardsDisplay: React.FC = () => {
   useEffect(() => {
     setCards([]);
   }, []);
+
+  useEffect(() => {
+    if (data) setCardsDB(data.cards.reverse());
+  }, [data]);
 
   const delay = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -74,24 +80,37 @@ const CardsDisplay: React.FC = () => {
     setShowPrintLoader(false);
   };
 
+  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    const filteredDBCards = data.cards.filter(
+      (card) =>
+        card.name.toLowerCase().includes(e.currentTarget.value) ||
+        card.description.toLowerCase().includes(e.currentTarget.value)
+    );
+    if (e.currentTarget.value !== "") setCardsDB(filteredDBCards);
+    if (e.currentTarget.value === "") setCardsDB(data.cards);
+  };
+
   return (
     <div className="w-full">
-      {showPrintLoader && (
-        <div className="float-right w-[264px] h-[42px] mt-4 mr-4">
-          <Loader />
-        </div>
-      )}
-      {!showPrintLoader && (
-        <Button
-          text="Prepare chosen cards for printing"
-          classes="float-right mt-4 mr-4"
-          fn={handleDownloadPDF}
-        />
-      )}
+      <div className="p-4 w-full flex flex-row items-center justify-between">
+        <Search customOnInput={handleSearch} />
+        {showPrintLoader && (
+          <div className="float-right w-[264px] h-[42px]">
+            <Loader />
+          </div>
+        )}
+        {!showPrintLoader && (
+          <Button
+            text="Prepare chosen cards for printing"
+            classes="float-right"
+            fn={handleDownloadPDF}
+          />
+        )}
+      </div>
 
       <div className="w-full grid grid-cols-fluid">
-        {data?.cards.map((card) => (
-          <div key={card.name} className="p-8">
+        {cardsDB.map((card) => (
+          <div key={card._id} className="p-8">
             <Card
               _id={card._id}
               name={card.name}
@@ -114,7 +133,7 @@ const CardsDisplay: React.FC = () => {
             ref={componentRef}
           >
             {cards.map((card) => (
-              <div key={card.name} className="p-4 pt-4 h-fit">
+              <div key={card._id} className="p-4 pt-4 h-fit">
                 <Card
                   _id={card._id}
                   name={card.name}
