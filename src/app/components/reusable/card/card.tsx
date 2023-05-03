@@ -26,20 +26,22 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
   const handleCheckboxClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.stopPropagation();
     setIsChecked(!isChecked);
-    setCards([
-      ...cards.filter((card) => card._id !== _id),
-      {
-        _id,
-        name,
-        image,
-        type,
-        description,
-        cost,
-        cooldown,
-        background,
-        check: !isChecked,
-      },
-    ]);
+    if (!isChecked)
+      setCards([
+        ...cards.filter((card) => card._id !== _id),
+        {
+          _id,
+          name,
+          image,
+          type,
+          description,
+          cost,
+          cooldown,
+          background,
+          check: !isChecked,
+        },
+      ]);
+    if (isChecked) setCards([...cards.filter((card) => card._id !== _id)]);
   };
 
   const redirect = () => push(`/cards/${_id}}`);
@@ -91,11 +93,11 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
         <div className="h-[0.7cm] bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-sky-400 to-indigo-900 z-50 backdrop:border border-solid border-1 border-black p-1 text-xs flex items-center justify-center relative w-[4.5cm] m-auto -mt-3 text-white">
           <span className={`${!toPrint ? "" : "mb-[15px]"}`}>{type}</span>
         </div>
-        <div className="border border-1 border-solid border-black w-[5cm] m-auto h-[2.75cm] p-3 -mt-2 text-black text-xs mb-4 font-medium">
+        <div className="border border-1 border-solid border-black w-[5cm] m-auto h-[2.75cm] p-3 -mt-2 text-black text-xs mb-4">
           <p
             className={`${
               !toPrint ? "" : "-mt-[8px]"
-            } break-words whitespace-pre-line`}
+            } break-words whitespace-pre-line text-white`}
           >
             {description}
           </p>

@@ -9,14 +9,15 @@ import Loader from "../reusable/loader/page";
 import { getCards } from "@/app/feches/fetches";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { pushToCardsStorage } from "../../../../services/storageService";
+import { toast } from "react-toastify";
 import { useCardContext } from "@/app/contexts/cardContext";
 import { useQuery } from "@tanstack/react-query";
 
 const CardsDisplay: React.FC = () => {
   const componentRef = useRef<HTMLDivElement>(null);
   const [showPrintArea, setShowPrintArea] = useState(false);
-  const { cards } = useCardContext();
+  const [showPrintLoader, setShowPrintLoader] = useState(false);
+  const { cards, setCards } = useCardContext();
   const { isLoading, isError, data, error } = useQuery<
     { cards: ICard[] },
     Error
@@ -24,6 +25,14 @@ const CardsDisplay: React.FC = () => {
     queryKey: ["cards"],
     queryFn: getCards,
   });
+
+  useEffect(() => {
+    setCards([]);
+  }, []);
+
+  const delay = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
 
   if (isLoading)
     return (
@@ -34,8 +43,18 @@ const CardsDisplay: React.FC = () => {
 
   if (isError) return <h1>{error.message}</h1>;
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
+    if (!cards.length) {
+      toast("No cards chosen to print", {
+        hideProgressBar: false,
+        autoClose: 4000,
+        type: "error",
+      });
+      return;
+    }
+    setShowPrintLoader(true);
     setShowPrintArea(true);
+    await delay(1000);
     const input = componentRef.current;
     if (!input) return;
     const pdf = new jsPDF("landscape", "pt", "letter");
@@ -52,15 +71,24 @@ const CardsDisplay: React.FC = () => {
       pdf.save("download.pdf");
       setShowPrintArea(false);
     });
+    setShowPrintLoader(false);
   };
 
   return (
     <div className="w-full">
-      <Button
-        text="Prepare chosen cards for printing"
-        classes="float-right mt-4 mr-4"
-        fn={handleDownloadPDF}
-      />
+      {showPrintLoader && (
+        <div className="float-right w-[264px] h-[42px] mt-4 mr-4">
+          <Loader />
+        </div>
+      )}
+      {!showPrintLoader && (
+        <Button
+          text="Prepare chosen cards for printing"
+          classes="float-right mt-4 mr-4"
+          fn={handleDownloadPDF}
+        />
+      )}
+
       <div className="w-full grid grid-cols-fluid">
         {data?.cards.map((card) => (
           <div key={card.name} className="p-8">

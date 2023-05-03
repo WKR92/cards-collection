@@ -29,9 +29,6 @@ export interface ICard {
 interface ICardForm {
   setShowFormArea: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-// regex do walidacji kosztu i odnowienia /^[0-9\-]+$/
-
 const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
   const [values, setValues] = useState({
     name: "",
@@ -63,6 +60,32 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
     window.scrollTo(0, 0);
   };
 
+  const handleChange = (e: React.FormEvent<HTMLInputElement>, key: string) =>
+    setValues({
+      ...values,
+      [key]: (e.target as HTMLInputElement).value,
+    });
+
+  const createInput = (
+    placeholder: string,
+    value: string,
+    required = true,
+    maxLength?: number
+  ) => {
+    return (
+      <input
+        required={required}
+        type="text"
+        placeholder={placeholder}
+        autoComplete="off"
+        value={(values[value as keyof ICard] as string) ?? ""}
+        maxLength={maxLength}
+        onInput={(e) => handleChange(e, value)}
+        className="w-full focus: outline-none card-name border border-solid tex-sm border-indigo-500 rounded p-2 border-5"
+      />
+    );
+  };
+
   return (
     <form onSubmit={(e) => handleSubmit(e)} className="w-full py-2 pt-4">
       <section className="w-full flex flex-col items-center justify-center bg-gray-850 body-font md:flex-col lg:flex-row">
@@ -71,22 +94,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             title="Card name"
             text="Nazwa może być jakakolwiek, ale niech pasuje do karty i nie
             przekracza 25 znaków."
-            input={
-              <input
-                required
-                type="text"
-                placeholder="Card name"
-                value={values.name}
-                maxLength={25}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setValues({
-                    ...values,
-                    name: (e.target as HTMLInputElement).value,
-                  })
-                }
-                className="w-full focus: outline-none card-name border border-solid tex-sm border-indigo-500 rounded p-2 border-5"
-              />
-            }
+            input={createInput("Card name", "name", true, 25)}
             icon={<SiNamebase size={100} />}
             side="left"
           />
@@ -95,22 +103,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             title="Card type"
             text="Typ karty to na przykład: Przedmiot, Akcja, Szybka akcja;
             cokolwiek innego, co wymyślisz i dobrze uzasadnisz. Do 25 znaków."
-            input={
-              <input
-                required
-                type="text"
-                maxLength={25}
-                placeholder="Card type"
-                value={values.type}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setValues({
-                    ...values,
-                    type: (e.target as HTMLInputElement).value,
-                  })
-                }
-                className="w-full focus: outline-none card-name border border-solid tex-sm border-indigo-500 rounded p-2 border-5"
-              />
-            }
+            input={createInput("Card type", "type", true, 25)}
             icon={<MdTypeSpecimen size={100} />}
             side="right"
           />
@@ -120,22 +113,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             text="Koszt karty w akcjach może być liczbą albo - , który oznacza
             brak kosztu. Myślnik daje się przy przedmiotach. Pamiętaj, że
             postać ma zazwyczaj do dyspozycji 3 akcje."
-            input={
-              <input
-                required
-                type="text"
-                maxLength={2}
-                placeholder="Card cost"
-                value={values.cost}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setValues({
-                    ...values,
-                    cost: (e.target as HTMLInputElement).value.toString(),
-                  })
-                }
-                className="w-full focus: outline-none card-name border border-solid tex-sm border-indigo-500 rounded p-2 border-5"
-              />
-            }
+            input={createInput("Card cost", "cost", true, 2)}
             icon={<GiExtractionOrb size={100} />}
             side="left"
           />
@@ -147,22 +125,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             karty ile razy się chce w danej turze. Czas odnowienia 1
             oznacza, że można używać karty, co ture, gdyż, co turę
             zdejmujemy z karty jeden token czasu odnowienia. Itd."
-            input={
-              <input
-                required
-                maxLength={2}
-                type="text"
-                placeholder="Card cooldown"
-                value={values.cooldown}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setValues({
-                    ...values,
-                    cooldown: (e.target as HTMLInputElement).value,
-                  })
-                }
-                className="w-full focus: outline-none card-name border border-solid tex-sm border-indigo-500 rounded p-2 border-5"
-              />
-            }
+            input={createInput("Card cooldown", "cooldown", true, 2)}
             icon={<GiTimeTrap size={100} />}
             side="right"
           />
@@ -171,21 +134,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             title="Card image url"
             text="Kliknij prawym na docelowy obraz i wybierz
             kopiuj adres obrazu poczym wklej go tutaj."
-            input={
-              <input
-                required
-                type="text"
-                placeholder="Card image url"
-                value={values.image}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setValues({
-                    ...values,
-                    image: (e.target as HTMLInputElement).value,
-                  })
-                }
-                className="w-full focus: outline-none card-name border border-solid tex-sm border-indigo-500 rounded p-2 border-5"
-              />
-            }
+            input={createInput("Card image url", "image", true)}
             icon={<SiMagento size={100} />}
             side="left"
           />
@@ -195,21 +144,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             text="Tło karty jest opcjonalne, ale możesz dać swoje jeśli chcesz.
             Kliknij prawym na docelowy obraz i wybierz
             kopiuj adres obrazu poczym wklej go tutaj"
-            input={
-              <input
-                required
-                type="text"
-                placeholder="Background image url"
-                value={values.background}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setValues({
-                    ...values,
-                    background: (e.target as HTMLInputElement).value,
-                  })
-                }
-                className="w-full focus: outline-none card-name border border-solid tex-sm border-indigo-500 rounded p-2 border-5"
-              />
-            }
+            input={createInput("Card background image url", "background", true)}
             icon={<MdFlipToBack size={100} />}
             side="right"
           />
