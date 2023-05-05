@@ -13,7 +13,7 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       gridTemplateColumns: {
-        fluid: 'repeat(auto-fit,minmax(18rem, 1fr))',
+        fluid: 'repeat(auto-fit,minmax(17rem, 17rem))',
       }
     },
     debugScreens: {

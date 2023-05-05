@@ -20,6 +20,7 @@ export const CardContext = createContext<ICardContext>({
     cost: "",
     cooldown: "",
     background: "",
+    price:  '',
   },
   setCard: () => {},
   cards: [],

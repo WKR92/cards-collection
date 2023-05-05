@@ -22,8 +22,10 @@ export interface ICard {
   cost: string;
   cooldown: string;
   background: string;
+  price?: string;
   check?: boolean;
   toPrint?: boolean;
+  classes?: string;
 }
 
 interface ICardForm {

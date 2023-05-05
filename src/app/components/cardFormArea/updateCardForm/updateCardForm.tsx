@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ICard } from "../cardForm/cardForm";
 import MaxRowsTextArea from "../../reusable/textArea/maxRowsTextArea";
 import UpdateInputBlock from "./updateCardInputBlock";
-import _ from 'lodash';
+import _ from "lodash";
 import { toast } from "react-toastify";
 import { updateCard } from "@/app/feches/fetches";
 import { useCardContext } from "@/app/contexts/cardContext";
@@ -43,8 +43,13 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
     const updatedCard: ICard = { ...card };
     Object.keys(updatedCard).forEach((key) => {
       const k = key as keyof ICard;
-      if (k === "check" || k === "_id" || k === "toPrint") return;
+      if (k === "check" || k === "_id" || k === "toPrint" || k === "classes")
+        return;
       if (updatedCard[k] === "") {
+        if (k === "price") {
+          updatedCard[k] = cardDB[k] ?? "";
+          return;
+        }
         updatedCard[k] = cardDB[k];
       }
     });
@@ -72,13 +77,14 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
     }
     setCard({
       ...card,
-      [value]: target.value,
+      [value]: target.value.toString(),
     });
   };
 
   const createInput = (
     name: string,
     value: string,
+    type = "text",
     maxLength?: number
   ) => {
     return (
@@ -86,7 +92,7 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
         autoComplete="off"
         name={name}
         id={name}
-        type="text"
+        type={type}
         value={(card[value as keyof ICard] as string | readonly string[]) ?? ""}
         maxLength={maxLength}
         onInput={(e) => handleChange(e, value)}
@@ -96,30 +102,33 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="grid md:grid-cols-2 md:gap-6 min-w-[320px]">
+    <form
+      onSubmit={handleSubmit}
+      className="min-w-[300px] max-w-[342px] mx-auto md:m-0 mt-8 md:mt-0"
+    >
+      <div className="grid sm:grid-cols-2 sm:gap-6">
         <UpdateInputBlock
           text="Card name"
           name="card_name"
-          input={createInput("card_name", "name", 25)}
+          input={createInput("card_name", "name", "text", 25)}
         />
         <UpdateInputBlock
           text="Card type"
           name="card_type"
-          input={createInput("card_type", "type", 25)}
+          input={createInput("card_type", "type", "text", 25)}
         />
       </div>
 
-      <div className="grid md:grid-cols-2 md:gap-6">
+      <div className="grid sm:grid-cols-2 sm:gap-6">
         <UpdateInputBlock
           text="Card cost"
           name="card_cost"
-          input={createInput("card_cost", "cost", 1)}
+          input={createInput("card_cost", "cost", "text", 1)}
         />
         <UpdateInputBlock
           text="Card cooldown"
           name="card_cooldown"
-          input={createInput("card_cooldown", "cooldown", 1)}
+          input={createInput("card_cooldown", "cooldown", "text", 1)}
         />
       </div>
 
@@ -151,6 +160,14 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
           />
         }
       />
+
+      {cardDB.type === "Przedmiot" && (
+        <UpdateInputBlock
+          text="Price"
+          name="card_price"
+          input={createInput("card_price", "price", "number")}
+        />
+      )}
 
       <button
         type="submit"

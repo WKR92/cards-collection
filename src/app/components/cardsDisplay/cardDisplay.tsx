@@ -42,7 +42,7 @@ const CardsDisplay: React.FC = () => {
 
   if (isLoading)
     return (
-      <div className="w-full p-4">
+      <div className="w-full p-4 flex-center-center">
         <Loader />
       </div>
     );
@@ -84,7 +84,8 @@ const CardsDisplay: React.FC = () => {
     const filteredDBCards = data.cards.filter(
       (card) =>
         card.name.toLowerCase().includes(e.currentTarget.value) ||
-        card.description.toLowerCase().includes(e.currentTarget.value)
+        card.description.toLowerCase().includes(e.currentTarget.value) ||
+        card.type.toLowerCase().includes(e.currentTarget.value)
     );
     if (e.currentTarget.value !== "") setCardsDB(filteredDBCards);
     if (e.currentTarget.value === "") setCardsDB(data.cards);
@@ -92,23 +93,23 @@ const CardsDisplay: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="p-4 w-full flex flex-row items-center justify-between">
+      <div className="p-4 w-full block  sm:flex flex-row items-center justify-between">
         <Search customOnInput={handleSearch} />
         {showPrintLoader && (
-          <div className="float-right w-[264px] h-[42px]">
+          <div className="sm:float-right w-[270px] h-[42px] mx-auto sm:m-0 flex-center-center">
             <Loader />
           </div>
         )}
         {!showPrintLoader && (
           <Button
             text="Prepare chosen cards for printing"
-            classes="float-right"
+            classes="sm:float-right min-w-[270px] mx-auto sm:m-0"
             fn={handleDownloadPDF}
           />
         )}
       </div>
 
-      <div className="w-full grid grid-cols-fluid">
+      <div className="w-full sm:grid sm:grid-cols-fluid mb-4">
         {cardsDB.map((card) => (
           <div key={card._id} className="p-8">
             <Card
@@ -122,6 +123,8 @@ const CardsDisplay: React.FC = () => {
               background={card.background}
               check={false}
               showCheckbox={true}
+              price={card.price ?? 'unknown'}
+              classes="mx-auto sm:mx-0"
             />
           </div>
         ))}

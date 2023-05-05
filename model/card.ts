@@ -8,6 +8,7 @@ const cardSchema = new Schema({
   description: String,
   image: String,
   background: String,
+  price: Number,
 });
 
 const Cards = models.card || model("card", cardSchema);

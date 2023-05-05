@@ -18,6 +18,8 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
   background,
   showCheckbox,
   toPrint,
+  classes,
+  price,
 }) => {
   const { push } = useRouter();
   const [isChecked, setIsChecked] = useState(false);
@@ -38,6 +40,7 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
           cost,
           cooldown,
           background,
+          price,
           check: !isChecked,
         },
       ]);
@@ -48,11 +51,13 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
 
   return (
     <div
-      onClick={redirect}
+      onClick={showCheckbox ? redirect : () => {}}
       className={`${
         showCheckbox
-          ? "hover:scale-110 hover:border-1 hover:border-white hover:shadow-sm hover:shadow-white"
+          ? "sm:hover:scale-110 hover:border-1 sm:hover:border-white sm:hover:shadow-sm sm:hover:shadow-white"
           : ""
+      } ${
+        classes ?? ""
       } transition-all duration-300 ease-in-out transform cursor-pointer relative border border-solid border-black border-1 w-[6cm] h-[8cm]`}
     >
       {showCheckbox && (
@@ -141,6 +146,11 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
           {cooldown}
         </p>
       </div>
+      {type === "Przedmiot" && (
+        <p className={`text-center text-orange-500 ${toPrint ? "hidden" : ""}`}>
+          Price: {price}
+        </p>
+      )}
     </div>
   );
 };

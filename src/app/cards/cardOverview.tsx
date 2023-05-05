@@ -47,7 +47,7 @@ export const CardOverview: React.FC<ICardOverview> = ({ id }) => {
 
   if (isLoading)
     return (
-      <div className="w-full p-4">
+      <div className="w-full p-4 flex-center-center">
         <Loader />
       </div>
     );
@@ -56,7 +56,11 @@ export const CardOverview: React.FC<ICardOverview> = ({ id }) => {
 
   return (
     <div className="w-full flex flex-col justify-center gap-10 py-8 md:flex-row">
-      <div className="py-10">
+      <div
+        className={`${
+          cardDB.type === "Przedmiot" ? "md:py-14" : "md:py-10"
+        } mx-auto md:m-0`}
+      >
         <Card
           name={getDisplayValue(card, cardDB, "name")}
           description={getDisplayValue(card, cardDB, "description")}
@@ -65,6 +69,7 @@ export const CardOverview: React.FC<ICardOverview> = ({ id }) => {
           type={getDisplayValue(card, cardDB, "type")}
           cooldown={getDisplayValue(card, cardDB, "cooldown")}
           cost={getDisplayValue(card, cardDB, "cost")}
+          price={getDisplayValue(card, cardDB, "price")}
         />
       </div>
       {cardDB && <IUpdateCardForm cardDB={cardDB} />}
