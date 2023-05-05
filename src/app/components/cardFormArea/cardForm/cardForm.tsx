@@ -1,6 +1,6 @@
 "use client";
 
-import { GiExtractionOrb, GiTimeTrap, GiPriceTag } from "react-icons/gi";
+import { GiExtractionOrb, GiPriceTag, GiTimeTrap } from "react-icons/gi";
 import { MdFlipToBack, MdTypeSpecimen } from "react-icons/md";
 import { SiMagento, SiNamebase } from "react-icons/si";
 import { useEffect, useState } from "react";
@@ -56,8 +56,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (Object.values(values).every((value) => value !== ""))
-      mutation.mutate(values);
+    mutation.mutate(values);
     setValues({} as ICard);
     setShowFormArea(false);
     window.scrollTo(0, 0);
