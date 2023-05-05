@@ -106,7 +106,7 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
           <p
             className={`${
               !toPrint ? "" : "-mt-[8px]"
-            } break-words whitespace-pre-line text-white text-xs`}
+            } break-words whitespace-pre-line text-white text-[10px] sm:text-xs `}
           >
             {description}
           </p>
