@@ -69,7 +69,6 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
         type: "error",
       });
   };
-
   const handleChange = (
     e: React.FormEvent<HTMLInputElement> | React.FormEvent<HTMLTextAreaElement>,
     value: string
@@ -79,12 +78,17 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
     if (value === "cost" || value === "cooldown") {
       if (!target.value.match(/^[0-9\-]*$/)) return;
     }
+    const conditionForFirstLetterUppercase =
+      value !== "image" && value !== "background";
     const val = target.value;
-    const valueWithFirstLetterUppercase =
-      val.charAt(0).toUpperCase() + val.slice(1);
+    const valueWithFirstLetterUppercase = conditionForFirstLetterUppercase
+      ? val.charAt(0).toUpperCase() + val.slice(1)
+      : val;
     setCard({
       ...card,
-      [value]: valueWithFirstLetterUppercase.toString(),
+      [value]: conditionForFirstLetterUppercase
+        ? valueWithFirstLetterUppercase.toString()
+        : val.toString().toLowerCase(),
     });
   };
 

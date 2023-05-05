@@ -103,7 +103,7 @@ const CardsDisplay: React.FC = () => {
         {!showPrintLoader && (
           <Button
             text="Prepare chosen cards for printing"
-            classes="sm:float-right min-w-[270px] mx-auto sm:m-0"
+            classes="sm:float-right min-w-[270px] mx-auto sm:m-0 hidden sm:flex"
             fn={handleDownloadPDF}
           />
         )}

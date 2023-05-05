@@ -64,12 +64,16 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>, key: string) => {
+    const conditionForFirstLetterUppercase =
+      key !== "image" && key !== "background";
     const value = (e.target as HTMLInputElement).value;
     const valueWithFirstLetterUppercase =
       value.charAt(0).toUpperCase() + value.slice(1);
     setValues({
       ...values,
-      [key]: valueWithFirstLetterUppercase.toString(),
+      [key]: conditionForFirstLetterUppercase
+        ? valueWithFirstLetterUppercase.toString()
+        : value.toString().toLowerCase(),
     });
   };
 

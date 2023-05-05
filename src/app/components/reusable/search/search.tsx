@@ -6,7 +6,7 @@ interface ISearch {
 
 const Search: React.FC<ISearch> = ({ customOnInput }) => {
   return (
-    <div className="h-[42px] w-[270px] sm:mb-0 mb-4 mx-auto sm:mx-0">
+    <div className="h-[42px] w-[270px] sm:mb-0 mx-auto sm:mx-0">
       <div className="relative mb-4 flex w-full flex-wrap items-stretch">
         <input
           type="search"
