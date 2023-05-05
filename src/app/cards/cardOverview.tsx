@@ -58,8 +58,8 @@ export const CardOverview: React.FC<ICardOverview> = ({ id }) => {
     <div className="w-full flex flex-col justify-center gap-10 py-8 md:flex-row">
       <div
         className={`${
-          cardDB.type === "Przedmiot" ? "md:py-14" : "md:py-10"
-        } mx-auto md:m-0`}
+          card.type === "Przedmiot" ? "md:py-14" : "md:py-10"
+        } mx-auto md:m-0 transition-all duration-700`}
       >
         <Card
           name={getDisplayValue(card, cardDB, "name")}

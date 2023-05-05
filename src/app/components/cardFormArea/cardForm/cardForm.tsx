@@ -1,6 +1,6 @@
 "use client";
 
-import { GiExtractionOrb, GiTimeTrap } from "react-icons/gi";
+import { GiExtractionOrb, GiTimeTrap, GiPriceTag } from "react-icons/gi";
 import { MdFlipToBack, MdTypeSpecimen } from "react-icons/md";
 import { SiMagento, SiNamebase } from "react-icons/si";
 import { useEffect, useState } from "react";
@@ -40,6 +40,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
     cost: "",
     cooldown: "",
     background: baseBackground,
+    price: "",
   } as ICard);
   const QueryClient = useQueryClient();
 
@@ -62,22 +63,27 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
     window.scrollTo(0, 0);
   };
 
-  const handleChange = (e: React.FormEvent<HTMLInputElement>, key: string) =>
+  const handleChange = (e: React.FormEvent<HTMLInputElement>, key: string) => {
+    const value = (e.target as HTMLInputElement).value;
+    const valueWithFirstLetterUppercase =
+      value.charAt(0).toUpperCase() + value.slice(1);
     setValues({
       ...values,
-      [key]: (e.target as HTMLInputElement).value,
+      [key]: valueWithFirstLetterUppercase.toString(),
     });
+  };
 
   const createInput = (
     placeholder: string,
     value: string,
     required = true,
+    type = "text",
     maxLength?: number
   ) => {
     return (
       <input
         required={required}
-        type="text"
+        type={type}
         placeholder={placeholder}
         autoComplete="off"
         value={(values[value as keyof ICard] as string) ?? ""}
@@ -90,13 +96,13 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
 
   return (
     <form onSubmit={(e) => handleSubmit(e)} className="w-full py-2 pt-4">
-      <section className="w-full flex flex-col items-center justify-center bg-gray-850 body-font md:flex-col lg:flex-row">
+      <section className="w-full flex flex-col items-center justify-center bg-gray-850 body-font lg:flex-row">
         <div className="container px-4 md:px-[5rem] py-10 mx-auto">
           <InputBlock
             title="Card name"
             text="Nazwa może być jakakolwiek, ale niech pasuje do karty i nie
             przekracza 25 znaków."
-            input={createInput("Card name", "name", true, 25)}
+            input={createInput("Card name", "name", true, "text", 25)}
             icon={<SiNamebase size={100} />}
             side="left"
           />
@@ -105,7 +111,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             title="Card type"
             text="Typ karty to na przykład: Przedmiot, Akcja, Szybka akcja;
             cokolwiek innego, co wymyślisz i dobrze uzasadnisz. Do 25 znaków."
-            input={createInput("Card type", "type", true, 25)}
+            input={createInput("Card type", "type", true, "text", 25)}
             icon={<MdTypeSpecimen size={100} />}
             side="right"
           />
@@ -115,7 +121,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             text="Koszt karty w akcjach może być liczbą albo - , który oznacza
             brak kosztu. Myślnik daje się przy przedmiotach. Pamiętaj, że
             postać ma zazwyczaj do dyspozycji 3 akcje."
-            input={createInput("Card cost", "cost", true, 2)}
+            input={createInput("Card cost", "cost", true, "text", 2)}
             icon={<GiExtractionOrb size={100} />}
             side="left"
           />
@@ -127,7 +133,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             karty ile razy się chce w danej turze. Czas odnowienia 1
             oznacza, że można używać karty, co ture, gdyż, co turę
             zdejmujemy z karty jeden token czasu odnowienia. Itd."
-            input={createInput("Card cooldown", "cooldown", true, 2)}
+            input={createInput("Card cooldown", "cooldown", true, "text", 2)}
             icon={<GiTimeTrap size={100} />}
             side="right"
           />
@@ -175,6 +181,16 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
             icon={<BsBodyText size={100} />}
             side="left"
           />
+          {values.type === "Przedmiot" && (
+            <InputBlock
+              title="Card price"
+              text="Szacowana cena przedmiotu w sklepie"
+              input={createInput("Card price", "price", true, "number")}
+              icon={<GiPriceTag size={100} />}
+              side="right"
+              classes="h-[170px]"
+            />
+          )}
 
           <button
             type="submit"
@@ -184,8 +200,12 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
           </button>
         </div>
 
-        <div className="relative pb-4 lg:h-[1850px] xl:pr-[9rem] 2xl:pr-[15rem]">
-          <div className="sticky top-[2rem]">
+        <div
+          className={`${
+            values.type === "Przedmiot" ? "lg:h-[2060px]" : "lg:h-[1850px]"
+          } relative pb-4  sm:pr-8 xl:pr-[9rem] 2xl:pr-[15rem]`}
+        >
+          <div className="sticky top-[2rem] mb-4">
             <Card
               name={values.name}
               image={values.image}
@@ -194,6 +214,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
               cost={values.cost}
               cooldown={values.cooldown}
               background={values.background}
+              price={values.price}
             />
           </div>
         </div>

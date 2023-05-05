@@ -52,6 +52,10 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
         }
         updatedCard[k] = cardDB[k];
       }
+      if (card.type !== "Przedmiot") {
+        updatedCard.price = "";
+        return;
+      }
     });
 
     if (!_.isEqual(updatedCard, cardDB)) {
@@ -75,9 +79,12 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
     if (value === "cost" || value === "cooldown") {
       if (!target.value.match(/^[0-9\-]*$/)) return;
     }
+    const val = target.value;
+    const valueWithFirstLetterUppercase =
+      val.charAt(0).toUpperCase() + val.slice(1);
     setCard({
       ...card,
-      [value]: target.value.toString(),
+      [value]: valueWithFirstLetterUppercase.toString(),
     });
   };
 
@@ -161,7 +168,7 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
         }
       />
 
-      {cardDB.type === "Przedmiot" && (
+      {card.type === "Przedmiot" && (
         <UpdateInputBlock
           text="Price"
           name="card_price"
