@@ -61,7 +61,7 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
       } transition-all duration-300 ease-in-out transform cursor-pointer relative border border-solid border-black border-1 min-w-[6cm] min-h-[8cm] w-[6cm] h-[8cm]`}
     >
       {showCheckbox && (
-        <div className="absolute top-0 right-0 pt-[6px] pr-[6px]">
+        <div className="hidden lg:block absolute top-0 right-0 pt-[6px] pr-[6px]">
           <input
             onClick={(e) => e.stopPropagation()}
             onChange={(e) => handleCheckboxClick(e)}

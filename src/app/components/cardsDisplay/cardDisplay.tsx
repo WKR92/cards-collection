@@ -81,18 +81,19 @@ const CardsDisplay: React.FC = () => {
   };
 
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value.toLowerCase();
     const filteredDBCards = data.cards.filter(
       (card) =>
-        card.name.toLowerCase().includes(e.currentTarget.value) ||
-        card.description.toLowerCase().includes(e.currentTarget.value) ||
-        card.type.toLowerCase().includes(e.currentTarget.value)
+        card.name.toLowerCase().includes(value) ||
+        card.description.toLowerCase().includes(value) ||
+        card.type.toLowerCase().includes(value)
     );
     if (e.currentTarget.value !== "") setCardsDB(filteredDBCards);
     if (e.currentTarget.value === "") setCardsDB(data.cards);
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <div className="p-4 w-full block  sm:flex flex-row items-center justify-between">
         <Search customOnInput={handleSearch} />
         {showPrintLoader && (
@@ -109,6 +110,12 @@ const CardsDisplay: React.FC = () => {
         )}
       </div>
 
+      {!!cards.length && (
+        <div className="hidden lg:block sticky bg-gray-200 top-10 float-left ml-4 z-50 rounded -mb-[40px] mx-2-[200px]">
+          <p className="p-2">Chosen cards: {cards.length}/8</p>
+        </div>
+      )}
+
       <div className="w-full sm:grid sm:grid-cols-fluid mb-4">
         {cardsDB.map((card) => (
           <div key={card._id} className="p-8">
@@ -123,7 +130,7 @@ const CardsDisplay: React.FC = () => {
               background={card.background}
               check={false}
               showCheckbox={true}
-              price={card.price ?? 'unknown'}
+              price={card.price ?? "unknown"}
               classes="mx-auto sm:mx-0"
             />
           </div>
