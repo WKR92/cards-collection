@@ -21,7 +21,7 @@ import mongoose from "mongoose";
 export async function dbConnect() {
   if (!process.env.MONGO_URI) {
     throw new Error(
-      "Please define the MONGO_URL environment variable inside .env.local"
+      "Please define the MONGO_URI environment variable inside .env.local"
     );
   }
 
@@ -30,7 +30,8 @@ export async function dbConnect() {
       console.log("Connected from previous");
       return global.mongoose.conn;
     } else {
-      const conString = process.env.MONGO_URL || "";
+      console.log('process.env.MONGO_URI', process.env.MONGO_URI)
+      const conString = process.env.MONGO_URI || "";
 
       const promise = mongoose.connect(conString);
 
