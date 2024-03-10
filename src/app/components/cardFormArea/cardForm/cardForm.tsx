@@ -22,7 +22,7 @@ export interface ICard {
   cost: string;
   cooldown: string;
   background: string;
-  price?: string;
+  price?: string | null;
   check?: boolean;
   toPrint?: boolean;
   classes?: string;
@@ -40,7 +40,7 @@ const CardForm: React.FC<ICardForm> = ({ setShowFormArea }) => {
     cost: "",
     cooldown: "",
     background: baseBackground,
-    price: "",
+    price: null,
   } as ICard);
   const QueryClient = useQueryClient();
 

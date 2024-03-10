@@ -9,7 +9,7 @@ export const head = ({ params }: head) => {
   const [name] = params.cardName;
   return (
     <>
-      <title>name</title>
+      <title>{name}</title>
     </>
   )
 }

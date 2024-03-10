@@ -1,16 +1,20 @@
 import Cards from "../../../../model/card";
 import { NextResponse } from "next/server";
-import connectMongo from "../../../../database/conn";
+import { dbConnect } from "../../../../database/conn";
+// import connectMongo from "../../../../database/conn";
 
 export async function GET() {
-  await connectMongo().catch(() =>
-    NextResponse.json(
-      { error: "Error while connecting" },
-      {
-        status: 500,
-      }
-    )
-  );
+  // await connectMongo().catch(() =>
+  //   NextResponse.json(
+  //     { error: "Error while connecting" },
+  //     {
+  //       status: 500,
+  //     }
+  //   )
+  // );
+
+  const connection = await dbConnect();
+  if (!connection) return;
 
   try {
     const cards = await Cards.find({});
@@ -35,14 +39,17 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  await connectMongo().catch(() => {
-    return NextResponse.json(
-      { error: "Error while connecting" },
-      {
-        status: 500,
-      }
-    );
-  });
+  // await connectMongo().catch(() => {
+  //   return NextResponse.json(
+  //     { error: "Error while connecting" },
+  //     {
+  //       status: 500,
+  //     }
+  //   );
+  // });
+
+  const connection = await dbConnect();
+  if (!connection) return;
   
   try {
     const body = await req.json();
@@ -72,14 +79,17 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  await connectMongo().catch(() => {
-    return NextResponse.json(
-      { error: "Error while connecting" },
-      {
-        status: 500,
-      }
-    );
-  });
+  // await connectMongo().catch(() => {
+  //   return NextResponse.json(
+  //     { error: "Error while connecting" },
+  //     {
+  //       status: 500,
+  //     }
+  //   );
+  // });
+
+  const connection = await dbConnect();
+  if (!connection) return;
 
   try {
     const body = await req.json();

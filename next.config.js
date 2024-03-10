@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    appDir: true,
     serverComponentsExternalPackages: ["mongoose"],
   },
   webpack(config) {
@@ -9,7 +8,16 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["i.pinimg.com", "images.unsplash.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "i.pinimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
   },
   typescript: {
     // !! WARN !!

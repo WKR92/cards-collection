@@ -48,6 +48,7 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
   };
 
   const redirect = () => push(`/cards/${_id}}`);
+  // const redirect = () => push(`/cards/ff}`);
 
   return (
     <div
@@ -82,6 +83,7 @@ const Card: React.FC<ICard & { showCheckbox?: boolean }> = ({
         sizes="100vw"
         width={0}
         height={0}
+        // priority={true}
       />
       <div>
         <div className="border border-solid border-black border-1 mt-[.2cm] w-[5cm] h-[0.8cm] text-black text-xs m-auto bg-gradient-to-r from-blue-100 via-blue-300 to-blue-500 flex items-center justify-center">

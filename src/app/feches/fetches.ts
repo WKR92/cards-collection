@@ -1,8 +1,8 @@
 import { ICard } from "../components/cardFormArea/cardForm/cardForm";
 
-export const wait = (duration: number) => {
-  return new Promise((resolve) => setTimeout(resolve, duration));
-};
+// export const wait = (duration: number) => {
+//   return new Promise((resolve) => setTimeout(resolve, duration));
+// };
 
 export const getCards = async () => {
   const res = await fetch("/api/cards", { method: "GET" });

@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import Card from "@/app/components/reusable/card/card";
 import { ICard } from "../components/cardFormArea/cardForm/cardForm";
 import IUpdateCardForm from "../components/cardFormArea/updateCardForm/updateCardForm";
-import Loader from "../components/reusable/loader/page";
-import { getCards } from "../feches/fetches";
 import { useCardContext } from "../contexts/cardContext";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+
+// import Loader from "../components/reusable/loader/page";
+
+// import { getCards } from "../feches/fetches";
+
+// import { useQuery } from "@tanstack/react-query";
 
 const getDisplayValue = (
   card: ICard,
@@ -21,38 +23,44 @@ const getDisplayValue = (
 };
 
 interface ICardOverview {
-  id: string;
+  cardFromDB: ICard;
 }
 
-export const CardOverview: React.FC<ICardOverview> = ({ id }) => {
+export const CardOverview: React.FC<ICardOverview> = ({ cardFromDB }) => {
   const { card, setCard } = useCardContext();
-  const [cardDB, setCardDB] = useState({} as ICard);
-  const { isLoading, isError, data, error } = useQuery<
-    { cards: ICard[] },
-    Error
-  >({
-    queryKey: ["cards"],
-    queryFn: getCards,
-  });
+  // const [cardDB, setCardDB] = useState({} as ICard);
+  // const { isLoading, isError, data, error } = useQuery<
+  //   { cards: ICard[] },
+  //   Error
+  // >({
+  //   queryKey: ["cards"],
+  //   queryFn: getCards,
+  // });
 
   useEffect(() => {
-    if (data) {
-      const card = data?.cards?.filter((card: ICard) => card._id === id);
-      if (card) {
-        setCardDB(card[0]);
-        setCard(card[0]);
-      }
+    if (cardFromDB) {
+      setCard(cardFromDB);
     }
-  }, [data, id, setCard]);
+  }, [cardFromDB, setCard]);
 
-  if (isLoading)
-    return (
-      <div className="w-full p-4 flex-center-center">
-        <Loader />
-      </div>
-    );
+  // useEffect(() => {
+  //   if (data) {
+  //     const card = data?.cards.filter((card: ICard) => card._id === id);
+  //     if (card) {
+  //       setCardDB(card[0]);
+  //       setCard(card[0]);
+  //     }
+  //   }
+  // }, [data, id, setCard]);
 
-  if (isError) return <h1>{error.message}</h1>;
+  // if (isLoading)
+  //   return (
+  //     <div className="w-full p-4 flex-center-center">
+  //       <Loader />
+  //     </div>
+  //   );
+
+  // if (isError) return <h1>{error.message}</h1>;
 
   return (
     <div className="w-full flex flex-col justify-center gap-10 py-8 md:flex-row">
@@ -62,17 +70,17 @@ export const CardOverview: React.FC<ICardOverview> = ({ id }) => {
         } mx-auto md:m-0 transition-all duration-700`}
       >
         <Card
-          name={getDisplayValue(card, cardDB, "name")}
-          description={getDisplayValue(card, cardDB, "description")}
-          image={getDisplayValue(card, cardDB, "image")}
-          background={getDisplayValue(card, cardDB, "background")}
-          type={getDisplayValue(card, cardDB, "type")}
-          cooldown={getDisplayValue(card, cardDB, "cooldown")}
-          cost={getDisplayValue(card, cardDB, "cost")}
-          price={getDisplayValue(card, cardDB, "price")}
+          name={getDisplayValue(card, cardFromDB, "name")}
+          description={getDisplayValue(card, cardFromDB, "description")}
+          image={getDisplayValue(card, cardFromDB, "image")}
+          background={getDisplayValue(card, cardFromDB, "background")}
+          type={getDisplayValue(card, cardFromDB, "type")}
+          cooldown={getDisplayValue(card, cardFromDB, "cooldown")}
+          cost={getDisplayValue(card, cardFromDB, "cost")}
+          price={getDisplayValue(card, cardFromDB, "price")}
         />
       </div>
-      {cardDB && <IUpdateCardForm cardDB={cardDB} />}
+      {cardFromDB && <IUpdateCardForm cardDB={cardFromDB} />}
     </div>
   );
 };

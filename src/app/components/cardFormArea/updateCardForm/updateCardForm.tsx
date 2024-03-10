@@ -1,14 +1,22 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+// import {
+//   QueryClient,
+//   useMutation,
+//   useQueryClient,
+// } from "@tanstack/react-query";
 
 import { ICard } from "../cardForm/cardForm";
 import MaxRowsTextArea from "../../reusable/textArea/maxRowsTextArea";
 import UpdateInputBlock from "./updateCardInputBlock";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import { updateCard } from "@/app/feches/fetches";
+import { updateCardServerAction } from "./serverActions";
 import { useCardContext } from "@/app/contexts/cardContext";
+
+// import { revalidatePath } from "next/cache";
+
+// import { updateCard } from "@/app/feches/fetches";
 
 interface IUpdateCardForm {
   cardDB: ICard;
@@ -16,26 +24,28 @@ interface IUpdateCardForm {
 
 const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
   const { card, setCard } = useCardContext();
-  const QueryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: updateCard,
-    onSuccess: () => {
-      QueryClient.invalidateQueries(["cards"]);
-      toast("Card updated successfully", {
-        hideProgressBar: false,
-        autoClose: 4000,
-        type: "success",
-      });
-    },
-    onError: (error: any) => {
-      toast(`Card update failed with: ${error.message}`, {
-        hideProgressBar: false,
-        autoClose: 4000,
-        type: "error",
-      });
-    },
-  });
+  // const QueryClient = useQueryClient();
+
+  // const mutation = useMutation({
+  //   mutationFn: updateCard,
+  //   onSuccess: () => {
+  //     QueryClient.invalidateQueries(["cards"]);
+  //     toast("Card updated successfully", {
+  //       hideProgressBar: false,
+  //       autoClose: 4000,
+  //       type: "success",
+  //     });
+  //   },
+  //   onError: (error: any) => {
+  //     toast(`Card update failed with: ${error.message}`, {
+  //       hideProgressBar: false,
+  //       autoClose: 4000,
+  //       type: "error",
+  //     });
+  //   },
+  // });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,13 +63,28 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
         updatedCard[k] = cardDB[k];
       }
       if (card.type !== "Przedmiot") {
-        updatedCard.price = "";
+        updatedCard.price = null;
         return;
       }
     });
 
     if (!_.isEqual(updatedCard, cardDB)) {
-      mutation.mutate(updatedCard);
+      try {
+        // mutation.mutate(updatedCard);
+        // queryClient.invalidateQueries(["cards"]);
+        updateCardServerAction(updatedCard);
+        toast("Card updated successfully", {
+          hideProgressBar: false,
+          autoClose: 4000,
+          type: "success",
+        });
+      } catch (error: any) {
+        toast(`Card update failed with: ${error.message}`, {
+          hideProgressBar: false,
+          autoClose: 4000,
+          type: "error",
+        });
+      }
       setCard(updatedCard);
     }
     if (_.isEqual(updatedCard, cardDB))
@@ -69,6 +94,7 @@ const UpdateCardForm: React.FC<IUpdateCardForm> = ({ cardDB }) => {
         type: "error",
       });
   };
+
   const handleChange = (
     e: React.FormEvent<HTMLInputElement> | React.FormEvent<HTMLTextAreaElement>,
     value: string

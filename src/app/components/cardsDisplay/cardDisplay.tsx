@@ -33,7 +33,7 @@ const CardsDisplay: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (data) setCardsDB(data.cards.reverse());
+    if (data && data?.cards !== cardsDB) setCardsDB(data.cards.reverse());
   }, [data]);
 
   const delay = (ms: number) => {
